@@ -89,3 +89,17 @@ class ArbreBinaire:
             self._afficher_en_ordre(noeud.gauche)
             print(noeud.valeur, end=' ')
             self._afficher_en_ordre(noeud.droite)
+
+class Categorie:
+    def __init__(self, nom):
+        self.nom = nom
+        self.inventions = {}
+
+    def __lt__(self, autre):
+        return self.nom < autre.nom
+
+    def __gt__(self, autre):
+        return self.nom > autre.nom
+
+    def __eq__(self, autre):
+        return self.nom == autre.nom
