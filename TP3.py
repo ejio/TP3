@@ -122,7 +122,7 @@ def rechercher_invention(noeud, invention):
         return False, None
 
     if invention in noeud.inventions:
-        return True, noeud
+        return True, noeud.inventions[invention]
 
     resultat = rechercher_invention(noeud.gauche, invention)
 
@@ -137,3 +137,8 @@ def ajouter_invention(categorie, nom, inventeur, annee):
         categorie.inventions[nom] = Invention(nom, inventeur, annee)
     else:
         print("Invention déjà ajoutée")
+
+def modifier_annee(nom_invention, nouvelle_annee):
+    trouve, invention = rechercher_invention(categories.racine, nom_invention)
+    if trouve:
+        invention.annee = nouvelle_annee # type: ignore
