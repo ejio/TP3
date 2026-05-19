@@ -146,3 +146,6 @@ def modifier_annee(nom_invention, nouvelle_annee):
         invention.annee = nouvelle_annee # type: ignore
     else:
         print("Cette invention n'existe pas encore")
+
+def afficher_invention_inventeur(inventeur):
+    
