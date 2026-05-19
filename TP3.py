@@ -38,9 +38,9 @@ class ArbreBinaire:
                 else:
                     courant = courant.droite
             if valeur < parent.valeur:
-                parent.gauche = nouveau_noeud
+                parent.gauche = nouveau_noeud # type: ignore
             else:
-                parent.droite = nouveau_noeud
+                parent.droite = nouveau_noeud # type: ignore
 
     def supprimer(self, valeur):
         parent = None
@@ -103,9 +103,37 @@ class Categorie:
 
     def __eq__(self, autre):
         return self.nom == autre.nom
+    
+class Invention:
+    def __init__(self, nom, inventeur, annee):
+        self.nom = nom
+        self.inventeur = inventeur
+        self.annee = annee
+        self.__str__ = nom
 
 categories = ArbreBinaire()
 
 def ajouter_categorie(nom):
     if categories.contient(nom) == 0:
         categories.ajouter(Categorie(nom))
+
+def rechercher_invention(noeud, invention):
+    if noeud is None:
+        return False, None
+
+    if invention in noeud.inventions:
+        return True, noeud
+
+    resultat = rechercher_invention(noeud.gauche, invention)
+
+    if resultat[0]:
+        return resultat
+
+    return rechercher_invention(noeud.droite, invention)
+
+def ajouter_invention(categorie, nom, inventeur, annee):
+    trouve, _ = rechercher_invention(categories.racine,nom)
+    if not rechercher_invention(categories.racine,nom):
+        categorie.inventions[nom] = Invention(nom, inventeur, annee)
+    else:
+        print("Invention déjà ajoutée")
