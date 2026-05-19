@@ -144,5 +144,5 @@ def modifier_annee(nom_invention, nouvelle_annee):
     trouve, invention = rechercher_invention(categories.racine, nom_invention)
     if trouve:
         invention.annee = nouvelle_annee # type: ignore
-
-
+    else:
+        print("Cette invention n'existe pas encore")
