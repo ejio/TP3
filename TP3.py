@@ -116,6 +116,8 @@ categories = ArbreBinaire()
 def ajouter_categorie(nom):
     if categories.contient(nom) == 0:
         categories.ajouter(Categorie(nom))
+    else:
+        print(f"Il y a déjà une catégorie {nom}")
 
 def rechercher_invention(noeud, invention):
     if noeud is None:
@@ -142,3 +144,5 @@ def modifier_annee(nom_invention, nouvelle_annee):
     trouve, invention = rechercher_invention(categories.racine, nom_invention)
     if trouve:
         invention.annee = nouvelle_annee # type: ignore
+
+
