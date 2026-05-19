@@ -109,7 +109,8 @@ class Invention:
         self.nom = nom
         self.inventeur = inventeur
         self.annee = annee
-        self.__str__ = nom
+    def __str__(self):
+        return self.nom
 
 categories = ArbreBinaire()
 
@@ -123,8 +124,8 @@ def rechercher_invention(noeud, invention):
     if noeud is None:
         return False, None
 
-    if invention in noeud.inventions:
-        return True, noeud.inventions[invention]
+    if invention in noeud.valeur.inventions:
+        return True, noeud.valeur.inventions[invention]
 
     resultat = rechercher_invention(noeud.gauche, invention)
 
@@ -135,7 +136,7 @@ def rechercher_invention(noeud, invention):
 
 def ajouter_invention(categorie, nom, inventeur, annee):
     trouve, _ = rechercher_invention(categories.racine,nom)
-    if not rechercher_invention(categories.racine,nom):
+    if not trouve:
         categorie.inventions[nom] = Invention(nom, inventeur, annee)
     else:
         print("Invention déjà ajoutée")
@@ -147,5 +148,17 @@ def modifier_annee(nom_invention, nouvelle_annee):
     else:
         print("Cette invention n'existe pas encore")
 
-def afficher_invention_inventeur(inventeur):
-    inventions = []
+def afficher_invention_inventeur(inventeur, noeud=None):
+    if noeud is None:
+        noeud = categories.racine
+
+    if noeud is None:
+        return
+
+    afficher_invention_inventeur(inventeur, noeud.gauche)
+
+    for invention in noeud.valeur.inventions.values():
+        if invention.inventeur == inventeur:
+            print(invention.nom)
+
+    afficher_invention_inventeur(inventeur, noeud.droite)
