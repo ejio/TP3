@@ -107,4 +107,5 @@ class Categorie:
 categories = ArbreBinaire()
 
 def ajouter_categorie(nom):
-    categories.ajouter(Categorie(nom))
+    if categories.contient(nom) == 0:
+        categories.ajouter(Categorie(nom))
