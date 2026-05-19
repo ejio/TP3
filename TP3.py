@@ -104,5 +104,7 @@ class Categorie:
     def __eq__(self, autre):
         return self.nom == autre.nom
 
+categories = ArbreBinaire()
+
 def ajouter_categorie(nom):
-    pass
+    categories.ajouter(Categorie(nom))
