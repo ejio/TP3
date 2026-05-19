@@ -149,4 +149,3 @@ def modifier_annee(nom_invention, nouvelle_annee):
 
 def afficher_invention_inventeur(inventeur):
     inventions = []
-    print("prout")
