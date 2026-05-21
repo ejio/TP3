@@ -114,51 +114,81 @@ class Invention:
 
 categories = ArbreBinaire()
 
+def rechercher_categorie(noeud, categorie):
+    if noeud is None:
+        return None
+    if noeud.valeur.nom == categorie:
+        return noeud
+    if categorie < noeud.valeur.nom:
+        return rechercher_categorie(noeud.gauche, categorie)
+    return rechercher_categorie(noeud.droite, categorie)
+
 def ajouter_categorie(nom):
-    if categories.contient(nom) == 0:
+    noeud = rechercher_categorie(categories.racine, nom)
+    if noeud is None:
         categories.ajouter(Categorie(nom))
+        print(f"Ajout catégorie {nom}")
     else:
         print(f"Il y a déjà une catégorie {nom}")
 
 def rechercher_invention(noeud, invention):
     if noeud is None:
         return False, None
-
     if invention in noeud.valeur.inventions:
         return True, noeud.valeur.inventions[invention]
-
     resultat = rechercher_invention(noeud.gauche, invention)
-
     if resultat[0]:
         return resultat
-
     return rechercher_invention(noeud.droite, invention)
 
 def ajouter_invention(categorie, nom, inventeur, annee):
-    trouve, _ = rechercher_invention(categories.racine,nom)
-    if not trouve:
-        categorie.inventions[nom] = Invention(nom, inventeur, annee)
-    else:
-        print("Invention déjà ajoutée")
+    noeud_categorie = rechercher_categorie(categories.racine, categorie)
+    if noeud_categorie is None:
+        print(f"Il n'y a pas de catégorie {categorie}")
+        return
+    trouve, _ = rechercher_invention(categories.racine, nom)
+    if trouve:
+        print(f"L'invention {nom} existe déjà")
+        return
+    noeud_categorie.valeur.inventions[nom] = Invention(nom, inventeur, annee)
+    print(f"Ajout de l'invention {nom}, à la catégorie {categorie}")
 
 def modifier_annee(nom_invention, nouvelle_annee):
     trouve, invention = rechercher_invention(categories.racine, nom_invention)
     if trouve:
         invention.annee = nouvelle_annee # type: ignore
+        print(f"Modification de l'année de {nom_invention} par {nouvelle_annee}")
     else:
         print("Cette invention n'existe pas encore")
 
-def afficher_invention_inventeur(inventeur, noeud=None):
-    if noeud is None:
+def afficher_invention_inventeur(inventeur, noeud=None, _premier_appel=True):
+    if _premier_appel:
         noeud = categories.racine
-
+        print(f"Inventions de {inventeur}")
     if noeud is None:
         return
-
-    afficher_invention_inventeur(inventeur, noeud.gauche)
-
+    afficher_invention_inventeur(inventeur, noeud.gauche, _premier_appel=False)
     for invention in noeud.valeur.inventions.values():
         if invention.inventeur == inventeur:
-            print(invention.nom)
+            print(invention.nom, "inventée en", invention.annee)
+    afficher_invention_inventeur(inventeur, noeud.droite, _premier_appel=False)
 
-    afficher_invention_inventeur(inventeur, noeud.droite)
+def afficher_categorie_inventions(noeud=None, _premier_appel=True):
+    if _premier_appel:
+        noeud = categories.racine
+        print("Catégories et inventions :")
+    if noeud is None:
+        return
+    afficher_categorie_inventions(noeud.gauche, _premier_appel=False)
+    categorie = noeud.valeur
+    print(categorie.nom)
+    if categorie.inventions:
+        for invention in categorie.inventions.values():
+            print(f"    - {invention.nom} | {invention.inventeur} | {invention.annee}")
+    else:
+        print("aucune invention")
+    afficher_categorie_inventions(noeud.droite, _premier_appel=False)
+
+ajouter_categorie("math")
+ajouter_invention("math", "derive", "Newton", 1500)
+afficher_invention_inventeur("Newton")
