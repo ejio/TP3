@@ -1,0 +1,8 @@
+ajouter,maths
+ajouter,physique
+ajouter,maths,gravite,newton,1628
+ajouter,maths,derive,newton,1666
+afficher
+modifier,gravite,1610
+affiicher,newton
+afficher

@@ -189,6 +189,37 @@ def afficher_categorie_inventions(noeud=None, _premier_appel=True):
         print("aucune invention")
     afficher_categorie_inventions(noeud.droite, _premier_appel=False)
 
-ajouter_categorie("math")
-ajouter_invention("math", "derive", "Newton", 1500)
-afficher_invention_inventeur("Newton")
+def lire_transactions(nom_fichier):
+    with open(nom_fichier, "r", encoding="utf-8") as fichier:
+        for ligne in fichier:
+            ligne = ligne.strip()
+            if not ligne:
+                continue
+
+            parties = ligne.split(",")
+            action = parties[0]
+
+            if action == "ajouter":
+                if len(parties) == 2:
+                    # ajouter,maths
+                    ajouter_categorie(parties[1])
+                elif len(parties) == 5:
+                    # ajouter,maths,gravite,newton,1628
+                    ajouter_invention(parties[1], parties[2], parties[3], int(parties[4]))
+
+            elif action == "afficher":
+                if len(parties) == 1:
+                    # afficher
+                    afficher_categorie_inventions()
+                elif len(parties) == 2:
+                    # affiicher,newton  (note: faute de frappe dans le doc, les deux marchent)
+                    afficher_invention_inventeur(parties[1])
+
+            elif action == "modifier":
+                # modifier,gravite,1610
+                modifier_annee(parties[1], int(parties[2]))
+
+            else:
+                print(f"Action inconnue : {action}")
+            
+lire_transactions("inventions.txt")
